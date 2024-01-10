@@ -3,12 +3,13 @@ from typing import Callable, Tuple
 from ...graphqls import (
     QueryColorMapData,
     QueryColorMapPayload,
-    QueryColorMapPayloadItem,
     QueryControlMapData,
     QueryControlMapPayloadItem,
+    QueryPosMapPayloadItem,
     SubControlFrame,
+    SubPositionFrame,
 )
-from ..models import Color, ColorMap, ControlMap, ControlMapElement
+from ..models import Color, ColorMap, ControlMap, ControlMapElement, PosMap
 
 
 def rgb_to_hex(rgb: Tuple[int, int, int]) -> str:
@@ -16,27 +17,19 @@ def rgb_to_hex(rgb: Tuple[int, int, int]) -> str:
     return f"#{r:02x}{g:02x}{b:02x}"
 
 
-def gql_color_map_query_to_state(
-    response: QueryColorMapData,
-) -> ColorMap:
-    payload: QueryColorMapPayload = response.colorMap
+def gql_pos_frame_sub_to_query(frameSub: SubPositionFrame) -> QueryPosMapPayloadItem:
+    frameQuery = QueryPosMapPayloadItem(start=frameSub.start, pos=[])
 
-    color_map: ColorMap = {}
+    frameQuery.pos = list(map(lambda pos: (pos[0], pos[1], pos[2]), frameSub.pos))
 
-    for id, color in payload.items():
-        color_map[id] = Color(
-            id=id,
-            name=color.color,
-            color_code=rgb_to_hex(color.colorCode),
-            rgb=color.colorCode,
-        )
-
-    return color_map
+    return frameQuery
 
 
-def gql_control_map_query_to_state(
-    response: QueryControlMapData,
-) -> ControlMap:
+# def gql_pos_map_query_to_state(response: QueryPosMapData) -> PosMap:
+#     pass
+
+
+def gql_control_map_query_to_state(response: QueryControlMapData) -> ControlMap:
     payload = response.frameIds
 
     control_map: ControlMap = {}
@@ -72,3 +65,19 @@ def gql_control_frame_sub_to_query(
     )
 
     return frameQuery
+
+
+def gql_color_map_query_to_state(response: QueryColorMapData) -> ColorMap:
+    payload: QueryColorMapPayload = response.colorMap
+
+    color_map: ColorMap = {}
+
+    for id, color in payload.items():
+        color_map[id] = Color(
+            id=id,
+            name=color.color,
+            color_code=rgb_to_hex(color.colorCode),
+            rgb=color.colorCode,
+        )
+
+    return color_map

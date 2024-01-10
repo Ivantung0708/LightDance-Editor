@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Tuple, Union
+from typing import Dict, Tuple, Union
 
-ID = str
+ID = int
 
 ColorName = str
 ColorCode = str
@@ -30,7 +30,7 @@ ColorMap = Dict[ColorID, Color]
 PartName = str
 DancerName = str
 
-MapID = str
+MapID = int
 
 
 @dataclass

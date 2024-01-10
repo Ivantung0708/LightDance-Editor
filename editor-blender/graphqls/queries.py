@@ -29,6 +29,76 @@ QueryDancerStatusPayload = List[QueryDancerStatusPayloadItem]
 
 
 """
+Coordinates
+"""
+
+QueryCoordinatesPayload = Tuple[float, float, float]
+
+
+"""
+PositionRecord
+"""
+
+
+QueryPosRecordData = List[ID]
+
+
+GET_POS_RECORD = gql(
+    """
+    query posRecord {
+        positionFrameIDs
+    }
+    """
+)
+
+
+"""
+PositionMap
+"""
+
+
+@dataclass
+class QueryPosMapPayloadItem(JSONWizard):
+    start: int
+    pos: List[QueryCoordinatesPayload]
+
+
+QueryPosMapPayload = Dict[ID, QueryPosMapPayloadItem]
+
+
+@dataclass
+class QueryPosMapData(JSONWizard):
+    frameIds: QueryPosMapPayload
+
+
+GET_POS_MAP = gql(
+    """
+    query posMap {
+        PosMap {
+            frameIds
+        }
+    }
+    """
+)
+
+
+"""
+ControlRecord
+"""
+
+
+QueryControlRecordData = List[ID]
+
+GET_CONTROL_RECORD = gql(
+    """
+    query controlRecord {
+        controlFrameIDs
+    }
+    """
+)
+
+
+"""
 ControlMap
 """
 
@@ -57,6 +127,11 @@ GET_CONTROL_MAP = gql(
     }
     """
 )
+
+
+"""
+EffectList
+"""
 
 
 """
